@@ -14,8 +14,8 @@
 2. Người dùng chọn một hay nhiều đặc trưng để dự đoán : <br>
   a. Close, Price Of Change (bắt buộc) <br>
   b. RSI, Bolling Bands, Moving Average,...(Nâng cao) <br> <br>
-<strong>Xây dựng DashBoard theo tutorial sau: </strong> https://data-flair.training/.../stock-price-prediction.../  
-<strong>Link tham khảo: </strong> https://radiant-brushlands-42789.herokuapp.com/.../stock...  
+<strong>Xây dựng DashBoard theo tutorial sau: </strong> https://data-flair.training/blogs/stock-price-prediction-machine-learning-project-in-python/?fbclid=IwAR18wddskn0-d6OTBb6y21lqtjxlnQzAZwBPUVi-yUG7e25G-JEHlC8ltMg  
+<strong>Link tham khảo: </strong> https://radiant-brushlands-42789.herokuapp.com/towardsdatascience.com/stock-predictions-with-state-of-the-art-transformer-and-time-embeddings-3a4485237de6?fbclid=IwAR3JlF6ZPZ8oFlT-gW5GywCURhE9GepzpF1UBdp_7ZKX6vFZkR4In0a2Dbc
 <strong>Tiêu chí chấm: </strong> Hỗ trợ càng nhiều mô hình dự đoán(Kết hợp phương pháp và các đặc trưng) càng tốt, giao diện đẹp, tiện dụng, dễ xài.  
 <strong>Deadline:</strong> 15/7/2021
 ## Bổ sung yêu cầu & giải đáp:

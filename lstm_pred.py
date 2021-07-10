@@ -5,7 +5,7 @@ from keras.models import Sequential
 from keras.layers import LSTM,Dropout,Dense
 from sklearn.preprocessing import MinMaxScaler
 
-df = pd.read_csv('NSE-TATA.csv')
+df = pd.read_csv('./data/NSE-TATA.csv')
 df.head()
 
 # Format date-time as year-month-date and use as index
@@ -51,7 +51,7 @@ lstm_model.add(Dense(1))
 lstm_model.compile(loss = 'mean_squared_error', optimizer = 'adam')
 lstm_model.fit(x_train_data, y_train_data, epochs = 1, batch_size = 1, verbose = 2)
 
-lstm_model.save('saved_model.h5')
+lstm_model.save('./model/saved_model.h5')
 
 inputs_data = new_dataset[len(new_dataset) - len(valid_data) - 60:].values
 inputs_data = inputs_data.reshape(-1,1)

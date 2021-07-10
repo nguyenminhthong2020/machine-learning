@@ -11,7 +11,7 @@ import numpy as np
 app = dash.Dash()
 server = app.server
 
-df_nse = pd.read_csv('NSE-TATA.csv')
+df_nse = pd.read_csv('./data/NSE-TATA.csv')
 
 df_nse['Date'] = pd.to_datetime(df_nse.Date, format='%Y-%m-%d')
 df_nse.index = df_nse['Date']
@@ -45,7 +45,7 @@ x_train, y_train = np.array(x_train), np.array(y_train)
 
 x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
-model = load_model('saved_model.h5')
+model = load_model('./model/saved_model.h5')
 
 inputs = new_data[len(new_data) - len(valid) - 60:].values
 inputs = inputs.reshape(-1, 1)
@@ -64,7 +64,7 @@ train = new_data[:987]
 valid = new_data[987:]
 valid['Predictions'] = closing_price
 
-df= pd.read_csv('stock_data.csv')
+df= pd.read_csv('./data/stock_data.csv')
 
 app.layout = html.Div([
     html.H1('Stock Price Analysis Dashboard', style = {'textAlign': 'center'}),

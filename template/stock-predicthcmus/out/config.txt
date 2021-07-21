@@ -1,2 +1,2 @@
-1 close
-2 open
+1 Close
+2 Price of change

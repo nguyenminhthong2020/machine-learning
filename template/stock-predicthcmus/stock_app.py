@@ -137,7 +137,9 @@ app.layout = html.Div([
 
             dcc.Dropdown(id='my-dropdown',
                          options=[{'label': 'Apple', 'value': 'AAPL'},
+                                  {'label': 'Facebook', 'value': 'FB'},
                                   {'label': 'Tesla', 'value': 'TSLA'},
+                                  {'label': 'Microsoft', 'value': 'MSFT'},
                                   {'label': 'IBM', 'value': 'IBM'}],
                          multi=True, value=['AAPL'],
                          style={"display": "block", "margin-left": "auto",
@@ -212,7 +214,7 @@ def on_form_change(radio_items_value, checklist_value):
     Input("checklist-input", "value"),
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
-    dropdown = {"TSLA": "Tesla", "AAPL": "Apple", "IBM": "IBM", }
+    dropdown = {"AAPL": "Apple","FB": "Facebook", "TSLA": "Tesla",  "IBM": "IBM","MSFT": "Microsoft",  }
     trace1 = []
     trace2 = []
     for stock in selected_dropdown:
@@ -222,7 +224,6 @@ def update_graph(selected_dropdown, radio_items_value, checklist_value):
             method += str(i)
         filename = './out/'+stock + '_' + radio_items_value + '_' + method + '.csv'
 
-        # df = pd.read_csv("./out/AAPL_ARIMA_1.csv")
         df = pd.read_csv(filename)
         df.head()
         df["Date"] = pd.to_datetime(df.Date, format="%Y-%m-%d")

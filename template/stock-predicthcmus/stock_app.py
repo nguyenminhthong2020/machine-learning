@@ -10,8 +10,8 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
 
-FA = "https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, FA])
+Font = "https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, Font])
 server = app.server
 
 scaler = MinMaxScaler(feature_range=(0, 1))
@@ -37,21 +37,7 @@ MAIN_STYLE = {
     "margin-left": "18rem"
 }
 
-radioitemsPP = dbc.FormGroup(
-    [
-        dbc.RadioItems(
-            options=[
-                {"label": "XGBoost", "value": "XGBoost"},
-                {"label": "RNN", "value": "RNN"},
-                {"label": "LSTM", "value": "LSTM"},
-            ],
-            value="XGBoost",
-            id="radioitems-input",
-        ),
-    ]
-)
-
-submenu_1 = [
+method = [
     html.Li(
         # use Row and Col components to position the chevrons
         dbc.Row(
@@ -64,32 +50,32 @@ submenu_1 = [
             className="my-1",
         ),
         style={"cursor": "pointer"},
-        id="submenu-1",
+        id="method",
     ),
     # we use the Collapse component to hide and reveal the navigation links
     dbc.Collapse(
         [
-            dbc.Form([radioitemsPP]),
+            dbc.Form([
+                dbc.FormGroup(
+                    [
+                        dbc.RadioItems(
+                            options=[
+                                {"label": "LSTM", "value": "LSTM"},
+                                {"label": "RNN", "value": "RNN"},
+                                {"label": "XGBoost", "value": "XGBoost"},
+                            ],
+                            value="LSTM",
+                            id="radio-items",
+                        ),
+                    ]
+                )
+            ]),
         ],
-        id="submenu-1-collapse",
+        id="collapse_method",
     ),
 ]
 
-checklistDT = dbc.FormGroup(
-    [
-        dbc.Checklist(
-            options=[
-                {"label": "Close", "value": 1},
-                {"label": "Price Of Change", "value": 2}
-            ],
-            value=[1],
-            id="checklist-input",
-        ),
-    ]
-)
-
-
-submenu_2 = [
+feature = [
     html.Li(
         dbc.Row(
             [
@@ -101,22 +87,33 @@ submenu_2 = [
             className="my-1",
         ),
         style={"cursor": "pointer"},
-        id="submenu-2",
+        id="feature",
     ),
     dbc.Collapse(
         [
-            dbc.Form([checklistDT]),
+            dbc.Form([
+                dbc.FormGroup([
+                    dbc.Checklist(
+                        options=[
+                            {"label": "Price Of Close", "value": 1},
+                            {"label": "Price Of Change", "value": 2}
+                        ],
+                        value=[1],
+                        id="checklist-items",
+                    ),
+                ]
+            )]),
         ],
-        id="submenu-2-collapse",
+        id="collapse_feature",
     ),
 ]
 
 app.layout = html.Div([
     # side bar
     html.Div([
-        html.H2("Predict Dashboard",  style={"textAlign": "center"}),
+        html.H2("MENU",  style={"textAlign": "center"}),
         html.Hr(),
-        dbc.Nav(submenu_1 + submenu_2, vertical=True),
+        dbc.Nav(method + feature, vertical=True),
     ],
         style=SIDEBAR_STYLE,
         id="sidebar",
@@ -134,10 +131,10 @@ app.layout = html.Div([
                     style={"textAlign": "center"}),
 
             dcc.Dropdown(id='my-dropdown',
-                         options=[{'label': 'Apple', 'value': 'AAPL'},
-                                  {'label': 'Tesla', 'value': 'TSLA'},
-                                  {'label': 'Microsoft', 'value': 'MSFT'},],
-                         multi=True, value=['AAPL'],
+                         options=[{'label': 'Apple', 'value': 'Apple'},
+                                  {'label': 'Tesla', 'value': 'Tesla'},
+                                  {'label': 'Microsoft', 'value': 'Microsoft'},],
+                         multi=True, value=['Apple'],
                          style={"display": "block", "margin-left": "auto",
                                 "margin-right": "auto", "width": "60%"}),
              dcc.Graph(id='compare'),
@@ -148,13 +145,10 @@ app.layout = html.Div([
 ])
 
 # this function is used to toggle the is_open property of each Collapse
-
-
 def toggle_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
-
 
 # this function applies the "open" class to rotate the chevron
 def set_navitem_class(is_open):
@@ -162,63 +156,42 @@ def set_navitem_class(is_open):
         return "open"
     return ""
 
+# callback method
+app.callback(
+    Output(f"collapse_method", "is_open"),
+    [Input(f"method", "n_clicks")],
+    [State(f"collapse_method", "is_open")],
+)(toggle_collapse)
 
-for i in [1, 2]:
-    app.callback(
-        Output(f"submenu-{i}-collapse", "is_open"),
-        [Input(f"submenu-{i}", "n_clicks")],
-        [State(f"submenu-{i}-collapse", "is_open")],
-    )(toggle_collapse)
+app.callback(
+    Output(f"method", "className"),
+    [Input(f"collapse_method", "is_open")],
+)(set_navitem_class)
 
-    app.callback(
-        Output(f"submenu-{i}", "className"),
-        [Input(f"submenu-{i}-collapse", "is_open")],
-    )(set_navitem_class)
+# callback feature
+app.callback(
+    Output(f"collapse_feature", "is_open"),
+    [Input(f"feature", "n_clicks")],
+    [State(f"collapse_feature", "is_open")],
+)(toggle_collapse)
 
+app.callback(
+    Output(f"feature", "className"),
+    [Input(f"collapse_feature", "is_open")],
+)(set_navitem_class)
 
-@app.callback(
-    Output("dash-title", "children"),
-    [
-        Input("radioitems-input", "value"),
-        Input("checklist-input", "value"),
-    ],
-)
-def on_form_change(radio_items_value, checklist_value):
-    template = 'Phương pháp {} - Đặc trưng [{}]'
-    temp = ['Close', 'Price Of Change']
-    title = ''
-    for i in range(len(checklist_value)):
-        if(i == 0):
-            title += temp[checklist_value[i]-1]
-        else:
-            title += ', ' + temp[checklist_value[i]-1]
-
-    # load file & update graph
-    # TODO
-
-    output_string = template.format(
-        radio_items_value,
-        title,
-    )
-    return output_string
-
-
-@app.callback(Output('compare', 'figure'),
-              [
+@app.callback(Output('compare', 'figure'), [
     Input('my-dropdown', 'value'),
-    Input("radioitems-input", "value"),
-    Input("checklist-input", "value"),
+    Input("radio-items", "value"),
+    Input("checklist-items", "value"),
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
-    dropdown = { "AAPL": "Apple", "TSLA": "Tesla", "MSFT": "Microsoft", }
+    dropdown = { "Apple": "Apple", "Tesla": "Tesla", "Microsoft": "Microsoft", }
     trace1 = []
     trace2 = []
     for stock in selected_dropdown:
         # TODO load file
-        method = ''
-        for i in checklist_value:
-            method += str(i)
-        filename = './out/'+stock + '_' + radio_items_value + '_' + method + '.csv'
+        filename = './out/' + radio_items_value + '/' + stock + '.csv'
 
         df = pd.read_csv(filename)
         df.head()
@@ -230,19 +203,19 @@ def update_graph(selected_dropdown, radio_items_value, checklist_value):
             go.Scatter(x=df.index,
                        y=df["Prediction"],
                        mode='lines', opacity=0.7,
-                       name=f'Prediction {dropdown[stock]}', textposition='bottom center'))
+                       name=f'Prediction for {dropdown[stock]}', textposition='bottom center'))
         trace2.append(
             go.Scatter(x=df.index,
                        y=df["Close"],
                        mode='lines', opacity=0.6,
-                       name=f'Actual {dropdown[stock]}', textposition='bottom center'))
+                       name=f'Actual for {dropdown[stock]}', textposition='bottom center'))
     traces = [trace1, trace2]
     data = [val for sublist in traces for val in sublist]
     figure = {'data': data,
-              'layout': go.Layout(colorway=["#5E0DAC", '#FF4F00', '#375CB1',
-                                            '#FF7400', '#FFF400', '#FF0056'],
+              'layout': go.Layout(colorway=["#f61111", '#00ff51', '#f0ff00',
+                                            '#8900ff', '#00d2ff', '#ff7400'],
                                   height=600,
-                                  title=f"Actual and Predict Prices for {', '.join(str(dropdown[i]) for i in selected_dropdown)} Over Time",
+                                  title=f"Predict Prices for {', '.join(str(dropdown[i]) for i in selected_dropdown)}",
                                   xaxis={"title": "Date",
                                          'rangeselector': {'buttons': list([{'count': 1, 'label': '1M',
                                                                              'step': 'month',

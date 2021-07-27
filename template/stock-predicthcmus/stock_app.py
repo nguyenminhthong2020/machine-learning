@@ -44,8 +44,6 @@ radioitemsPP = dbc.FormGroup(
                 {"label": "XGBoost", "value": "XGBoost"},
                 {"label": "RNN", "value": "RNN"},
                 {"label": "LSTM", "value": "LSTM"},
-                {"label": "ARIMA", "value": "ARIMA"},
-                {"label": "Transformer and Time Embeddings", "value": "TSF & TE"},
             ],
             value="XGBoost",
             id="radioitems-input",
@@ -58,7 +56,7 @@ submenu_1 = [
         # use Row and Col components to position the chevrons
         dbc.Row(
             [
-                dbc.Col("Phương pháp", style={"fontWeight": "bold"}),
+                dbc.Col("Method", style={"fontWeight": "bold"}),
                 dbc.Col(
                     html.I(className="fas fa-chevron-right mr-3"), width="auto"
                 ),
@@ -95,7 +93,7 @@ submenu_2 = [
     html.Li(
         dbc.Row(
             [
-                dbc.Col("Đặc trưng", style={"fontWeight": "bold"}),
+                dbc.Col("Feature", style={"fontWeight": "bold"}),
                 dbc.Col(
                     html.I(className="fas fa-chevron-right mr-3"), width="auto"
                 ),
@@ -137,10 +135,8 @@ app.layout = html.Div([
 
             dcc.Dropdown(id='my-dropdown',
                          options=[{'label': 'Apple', 'value': 'AAPL'},
-                                  {'label': 'Facebook', 'value': 'FB'},
                                   {'label': 'Tesla', 'value': 'TSLA'},
-                                  {'label': 'Microsoft', 'value': 'MSFT'},
-                                  {'label': 'IBM', 'value': 'IBM'}],
+                                  {'label': 'Microsoft', 'value': 'MSFT'},],
                          multi=True, value=['AAPL'],
                          style={"display": "block", "margin-left": "auto",
                                 "margin-right": "auto", "width": "60%"}),
@@ -214,7 +210,7 @@ def on_form_change(radio_items_value, checklist_value):
     Input("checklist-input", "value"),
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
-    dropdown = {"AAPL": "Apple","FB": "Facebook", "TSLA": "Tesla",  "IBM": "IBM","MSFT": "Microsoft",  }
+    dropdown = { "AAPL": "Apple", "TSLA": "Tesla", "MSFT": "Microsoft", }
     trace1 = []
     trace2 = []
     for stock in selected_dropdown:

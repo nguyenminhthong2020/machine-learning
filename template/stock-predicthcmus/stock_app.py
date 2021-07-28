@@ -140,7 +140,9 @@ app.layout = html.Div([
                                   {'label': 'Facebook', 'value': 'FB'},
                                   {'label': 'Tesla', 'value': 'TSLA'},
                                   {'label': 'Microsoft', 'value': 'MSFT'},
-                                  {'label': 'IBM', 'value': 'IBM'}],
+                                  {'label': 'IBM', 'value': 'IBM'},
+                                  {'label': 'Bank Of America Coperation', 'value': 'BAC'},
+                                  {'label': 'Coca Cola', 'value': 'CocaCola'}],
                          multi=True, value=['AAPL'],
                          style={"display": "block", "margin-left": "auto",
                                 "margin-right": "auto", "width": "60%"}),
@@ -214,7 +216,7 @@ def on_form_change(radio_items_value, checklist_value):
     Input("checklist-input", "value"),
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
-    dropdown = {"AAPL": "Apple","FB": "Facebook", "TSLA": "Tesla",  "IBM": "IBM","MSFT": "Microsoft",  }
+    dropdown = {"AAPL": "Apple","FB": "Facebook", "TSLA": "Tesla",  "IBM": "IBM","MSFT": "Microsoft","CocaCola": "CocaCola",  "BAC": "Bank Of America Coperation"   }
     trace1 = []
     trace2 = []
     for stock in selected_dropdown:

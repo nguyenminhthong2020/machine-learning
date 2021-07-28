@@ -24,7 +24,7 @@ SIDEBAR_STYLE = {
     "bottom": 0,
     "width": "16rem",
     "padding": "2rem 1rem",
-    "background-color": "#f8f9fa",
+    "background-color": "#7fa934",
 }
 
 CONTENT_STYLE = {
@@ -131,10 +131,12 @@ app.layout = html.Div([
                     style={"textAlign": "center"}),
 
             dcc.Dropdown(id='my-dropdown',
-                         options=[{'label': 'Apple', 'value': 'Apple'},
-                                  {'label': 'Tesla', 'value': 'Tesla'},
-                                  {'label': 'Microsoft', 'value': 'Microsoft'},],
-                         multi=True, value=['Apple'],
+                         options=[{'label': '^IXIC', 'value': '^IXIC'},
+                                  {'label': 'NIO', 'value': 'NIO'},
+                                  {'label': 'OGEN', 'value': 'OGEN'},
+                                  {'label': 'UPS', 'value': 'UPS'},
+                                  {'label': 'XPEV', 'value': 'XPEV'},],
+                         multi=True, value=['^IXIC'],
                          style={"display": "block", "margin-left": "auto",
                                 "margin-right": "auto", "width": "60%"}),
              dcc.Graph(id='compare'),
@@ -186,9 +188,9 @@ app.callback(
     Input("checklist-items", "value"),
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
-    dropdown = { "Apple": "Apple", "Tesla": "Tesla", "Microsoft": "Microsoft", }
-    trace1 = []
-    trace2 = []
+    dropdown = { "^IXIC": "^IXIC", "NIO": "NIO", "OGEN": "OGEN", "UPS": "UPS", "XPEV": "XPEV"}
+    trace_predict = []
+    trace_original = []
     for stock in selected_dropdown:
         # TODO load file
         filename = './out/' + radio_items_value + '/' + stock + '.csv'
@@ -199,23 +201,22 @@ def update_graph(selected_dropdown, radio_items_value, checklist_value):
         df.index = df['Date']
 
         # Load figure
-        trace1.append(
+        trace_predict.append(
             go.Scatter(x=df.index,
                        y=df["Prediction"],
-                       mode='lines', opacity=0.7,
-                       name=f'Prediction for {dropdown[stock]}', textposition='bottom center'))
-        trace2.append(
+                       mode='lines',
+                       name=f'Predicted price of {dropdown[stock]}', textposition='bottom center'))
+        trace_original.append(
             go.Scatter(x=df.index,
                        y=df["Close"],
-                       mode='lines', opacity=0.6,
-                       name=f'Actual for {dropdown[stock]}', textposition='bottom center'))
-    traces = [trace1, trace2]
+                       mode='lines',
+                       name=f'Original price of {dropdown[stock]}', textposition='bottom center'))
+    traces = [trace_original, trace_predict]
     data = [val for sublist in traces for val in sublist]
     figure = {'data': data,
               'layout': go.Layout(colorway=["#f61111", '#00ff51', '#f0ff00',
                                             '#8900ff', '#00d2ff', '#ff7400'],
                                   height=600,
-                                  title=f"Predict Prices for {', '.join(str(dropdown[i]) for i in selected_dropdown)}",
                                   xaxis={"title": "Date",
                                          'rangeselector': {'buttons': list([{'count': 1, 'label': '1M',
                                                                              'step': 'month',

@@ -12,6 +12,7 @@ import numpy as np
 
 Font = "https://use.fontawesome.com/releases/v5.8.1/css/all.css"
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, Font])
+app.title = "stock prediction"
 server = app.server
 
 scaler = MinMaxScaler(feature_range=(0, 1))
@@ -19,10 +20,11 @@ scaler = MinMaxScaler(feature_range=(0, 1))
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
     "position": "fixed",
-    "top": 0,
-    "left": 0,
-    "bottom": 0,
+    "top": "0",
+    "right": 0,
+    # "bottom": 0,
     "width": "16rem",
+    "height": "50%",
     "padding": "2rem 1rem",
     "background-color": "#7fa934",
 }
@@ -34,7 +36,8 @@ CONTENT_STYLE = {
 }
 
 MAIN_STYLE = {
-    "margin-left": "18rem"
+    # "margin-left": "18rem"
+    "margin-right": "18rem"
 }
 
 method = [
@@ -42,7 +45,8 @@ method = [
         # use Row and Col components to position the chevrons
         dbc.Row(
             [
-                dbc.Col("Method", style={"fontWeight": "bold"}),
+                dbc.Col("Method", style={
+                        "fontWeight": "bold", "fontSize": "1.25rem"}),
                 dbc.Col(
                     html.I(className="fas fa-chevron-right mr-3"), width="auto"
                 ),
@@ -65,6 +69,7 @@ method = [
                                 {"label": "XGBoost", "value": "XGBoost"},
                             ],
                             value="LSTM",
+                            style={"color": "white"},
                             id="radio-items",
                         ),
                     ]
@@ -79,7 +84,8 @@ feature = [
     html.Li(
         dbc.Row(
             [
-                dbc.Col("Feature", style={"fontWeight": "bold"}),
+                dbc.Col("Feature", style={
+                        "fontWeight": "bold", "fontSize": "1.25rem"}),
                 dbc.Col(
                     html.I(className="fas fa-chevron-right mr-3"), width="auto"
                 ),
@@ -96,13 +102,14 @@ feature = [
                     dbc.Checklist(
                         options=[
                             {"label": "Price Of Close", "value": 1},
-                            {"label": "Price Of Change", "value": 2}
+                            # {"label": "Price Of Change", "value": 2}
                         ],
                         value=[1],
+                        style={"color": "white"},
                         id="checklist-items",
                     ),
                 ]
-            )]),
+                )]),
         ],
         id="collapse_feature",
     ),
@@ -124,8 +131,9 @@ app.layout = html.Div([
 
     html.Div([
         html.H1("Stock Price Analysis Dashboard",
-                style={"textAlign": "center"}),
-        html.Hr(),
+                style={"textAlign": "center", "color": "#7fa934"}),
+        # html.Hr(),
+        html.Br(),
         html.Div([
             html.H3(id="dash-title",
                     style={"textAlign": "center"}),
@@ -135,10 +143,10 @@ app.layout = html.Div([
                                   {'label': 'NIO', 'value': 'NIO'},
                                   {'label': 'OGEN', 'value': 'OGEN'},
                                   {'label': 'UPS', 'value': 'UPS'},
-                                  {'label': 'XPEV', 'value': 'XPEV'},],
+                                  {'label': 'XPEV', 'value': 'XPEV'}, ],
                          multi=True, value=['^IXIC'],
                          style={"display": "block", "margin-left": "auto",
-                                "margin-right": "auto", "width": "60%"}),
+                                "margin-right": "0", "width": "60%"}),
              dcc.Graph(id='compare'),
              ], className="container"),
     ],
@@ -147,16 +155,21 @@ app.layout = html.Div([
 ])
 
 # this function is used to toggle the is_open property of each Collapse
+
+
 def toggle_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
 
 # this function applies the "open" class to rotate the chevron
+
+
 def set_navitem_class(is_open):
     if is_open:
         return "open"
     return ""
+
 
 # callback method
 app.callback(
@@ -182,13 +195,15 @@ app.callback(
     [Input(f"collapse_feature", "is_open")],
 )(set_navitem_class)
 
+
 @app.callback(Output('compare', 'figure'), [
     Input('my-dropdown', 'value'),
     Input("radio-items", "value"),
     Input("checklist-items", "value"),
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
-    dropdown = { "^IXIC": "^IXIC", "NIO": "NIO", "OGEN": "OGEN", "UPS": "UPS", "XPEV": "XPEV"}
+    dropdown = {"^IXIC": "^IXIC", "NIO": "NIO",
+                "OGEN": "OGEN", "UPS": "UPS", "XPEV": "XPEV"}
     trace_predict = []
     trace_original = []
     for stock in selected_dropdown:
@@ -231,4 +246,4 @@ def update_graph(selected_dropdown, radio_items_value, checklist_value):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=3000)

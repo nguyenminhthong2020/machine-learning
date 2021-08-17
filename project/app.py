@@ -10,7 +10,7 @@ from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 
 
-# Tạo ra một app (web)
+# Tạo ra một app (web server)
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, "https://use.fontawesome.com/releases/v5.10.0/css/all.css"])
 app.title = "stock prediction"
 server = app.server

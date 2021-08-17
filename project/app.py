@@ -60,7 +60,6 @@ method = [
                         dbc.RadioItems(
                             options=[
                                 {"label": "LSTM", "value": "LSTM"},
-                                {"label": "RNN", "value": "RNN"},
                                 {"label": "XGBoost", "value": "XGBoost"},
                                 {"label": "SimpleRNN", "value": "SimpleRNN"},
                             ],
@@ -138,7 +137,7 @@ app.layout = html.Div([
                                   {'label': 'NIO', 'value': 'NIO'},
                                   {'label': 'OGEN', 'value': 'OGEN'},
                                   {'label': 'UPS', 'value': 'UPS'},
-                                #   {'label': 'XPEV', 'value': 'XPEV'}, 
+                                  {'label': 'XPEV', 'value': 'XPEV'}, 
                                   ],
                          multi=True, value=['^IXIC'],
                          style={"display": "block", "margin-left": "auto",
@@ -199,7 +198,7 @@ app.callback(
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
     dropdown = {"^IXIC": "^IXIC", "NIO": "NIO",
-                 "OGEN": "OGEN", "UPS": "UPS"} 
+                 "OGEN": "OGEN", "UPS": "UPS", "XPEV": "XPEV"} 
                 # "XPEV": "XPEV"}
     trace_predict = []
     trace_original = []

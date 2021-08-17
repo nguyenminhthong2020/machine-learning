@@ -61,7 +61,8 @@ method = [
                             options=[
                                 {"label": "LSTM", "value": "LSTM"},
                                 {"label": "RNN", "value": "RNN"},
-                                {"label": "XGBoost", "value": "XGBoost"}
+                                {"label": "XGBoost", "value": "XGBoost"},
+                                {"label": "SimpleRNN", "value": "SimpleRNN"},
                             ],
                             value="LSTM",
                             style={"color": "white"},
@@ -137,7 +138,8 @@ app.layout = html.Div([
                                   {'label': 'NIO', 'value': 'NIO'},
                                   {'label': 'OGEN', 'value': 'OGEN'},
                                   {'label': 'UPS', 'value': 'UPS'},
-                                  {'label': 'XPEV', 'value': 'XPEV'}, ],
+                                #   {'label': 'XPEV', 'value': 'XPEV'}, 
+                                  ],
                          multi=True, value=['^IXIC'],
                          style={"display": "block", "margin-left": "auto",
                                 "margin-right": "0", "width": "60%"}),
@@ -197,13 +199,14 @@ app.callback(
 ])
 def update_graph(selected_dropdown, radio_items_value, checklist_value):
     dropdown = {"^IXIC": "^IXIC", "NIO": "NIO",
-                "OGEN": "OGEN", "UPS": "UPS", "XPEV": "XPEV"}
+                 "OGEN": "OGEN", "UPS": "UPS"} 
+                # "XPEV": "XPEV"}
     trace_predict = []
     trace_original = []
     for stock in selected_dropdown:
         # TODO load file
         filename = './out/' + radio_items_value + '/' + stock + '.csv'
-
+        
         df = pd.read_csv(filename)
         df.head()
         df["Date"] = pd.to_datetime(df.Date, format="%Y-%m-%d")
